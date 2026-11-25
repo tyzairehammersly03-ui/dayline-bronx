@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#dceeff" />
+  <meta name="description" content="A bright, mobile-first Bronx weather and market dashboard." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Dayline" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="./assets/icon-192.png" />
+  <link rel="icon" type="image/svg+xml" href="./assets/icon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0,0" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Dayline — Bronx & Markets</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="Dayline home">
+        <span class="brand-mark"><span class="material-symbols-rounded">partly_cloudy_day</span></span>
+        <span>dayline</span>
+      </a>
+      <div class="top-actions">
+        <span class="live-pill"><span class="pulse"></span> LIVE BOARD</span>
+        <button class="icon-button" id="refreshButton" aria-label="Refresh data" title="Refresh data"><span class="material-symbols-rounded">refresh</span></button>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="welcome-row">
+        <div>
+          <p class="eyebrow" id="dateLabel">WEDNESDAY, NOVEMBER 25</p>
+          <h1>Your day,<br /><span>at a glance.</span></h1>
+        </div>
+        <div class="welcome-orb" aria-hidden="true"><span class="material-symbols-rounded">flare</span></div>
+      </section>
+
+      <section class="weather-hero panel" id="weatherPanel" aria-labelledby="weatherTitle">
+        <div class="weather-topline">
+          <div>
+            <div class="section-kicker"><span class="material-symbols-rounded">location_on</span> THE BRONX, NEW YORK</div>
+            <p class="subtle" id="weatherUpdated">Loading local conditions…</p>
+          </div>
+          <button class="unit-toggle" id="unitToggle" aria-label="Switch temperature units">°F <span>/</span> °C</button>
+        </div>
+        <div class="weather-main">
+          <div class="temperature-wrap">
+            <div class="temperature" id="temperature">--°</div>
+            <div>
+              <h2 id="weatherTitle">Checking the sky</h2>
+              <p class="feels" id="feelsLike">Feels like --°</p>
+            </div>
+          </div>
+          <div class="weather-symbol" id="weatherSymbol"><span class="material-symbols-rounded">cloud</span></div>
+        </div>
+        <div class="weather-stats">
+          <div class="weather-stat"><span class="material-symbols-rounded">air</span><div><small>WIND</small><strong id="windValue">-- mph</strong></div></div>
+          <div class="weather-stat"><span class="material-symbols-rounded">humidity_percentage</span><div><small>HUMIDITY</small><strong id="humidityValue">--%</strong></div></div>
+          <div class="weather-stat"><span class="material-symbols-rounded">water_drop</span><div><small>PRECIPITATION</small><strong id="precipValue">-- in</strong></div></div>
+        </div>
+        <div class="sun-row">
+          <span><span class="material-symbols-rounded">wb_twilight</span> Sunrise <b id="sunriseValue">--</b></span>
+          <div class="sun-track"><span id="sunProgress"></span></div>
+          <span>Sunset <b id="sunsetValue">--</b> <span class="material-symbols-rounded">wb_twilight</span></span>
+        </div>
+        <div class="hero-footer"><span class="source-dot"></span><span id="weatherSource">Weather data by Open-Meteo</span><span class="footer-spacer"></span><span id="weatherError" class="inline-error"></span></div>
+      </section>
+
+      <section class="alert-card" id="weatherAlert" hidden>
+        <div class="alert-icon"><span class="material-symbols-rounded">warning</span></div>
+        <div><strong id="alertTitle">Weather alert</strong><p id="alertText"></p><small id="alertSource">Official National Weather Service alert</small></div>
+        <button class="alert-close" id="dismissAlert" aria-label="Dismiss alert"><span class="material-symbols-rounded">close</span></button>
+      </section>
+
+      <section class="forecast-section section-block">
+        <div class="section-heading"><div><p class="eyebrow">THE NEXT FEW HOURS</p><h2>Coming up</h2></div><span class="heading-icon"><span class="material-symbols-rounded">schedule</span></span></div>
+        <div class="hourly-strip" id="hourlyForecast"><div class="loading-card">Loading the hourly forecast…</div></div>
+      </section>
+
+      <section class="forecast-section section-block">
+        <div class="section-heading"><div><p class="eyebrow">A LITTLE FURTHER OUT</p><h2>7-day forecast</h2></div><span class="heading-icon lavender"><span class="material-symbols-rounded">calendar_month</span></span></div>
+        <div class="daily-list panel" id="dailyForecast"><div class="loading-card">Loading the week…</div></div>
+      </section>
+
+      <section class="market-section section-block" id="markets">
+        <div class="section-heading market-heading"><div><p class="eyebrow">THE MARKET, MOVING</p><h2>Top stock movers</h2></div><span class="heading-icon"><span class="material-symbols-rounded">monitoring</span></span></div>
+        <div class="market-summary panel">
+          <div class="market-summary-top"><div><span class="market-label">MARKET SNAPSHOT</span><strong id="marketStatus">Loading movers…</strong></div><span class="market-icon"><span class="material-symbols-rounded">show_chart</span></span></div>
+          <div class="index-row" id="indexRow">
+            <div><small>SPY</small><b class="negative">−0.5%</b></div>
+            <div><small>QQQ</small><b class="negative">−1.4%</b></div>
+            <div><small>IWM</small><b class="positive">+0.5%</b></div>
+            <div><small>DIA</small><b class="positive">+0.3%</b></div>
+          </div>
+        </div>
+        <div class="mover-toolbar">
+          <div class="segmented" role="tablist" aria-label="Mover type">
+            <button class="segment active" id="gainersTab" role="tab" aria-selected="true">Top gainers</button>
+            <button class="segment" id="losersTab" role="tab" aria-selected="false">Top losers</button>
+          </div>
+          <label class="search-box"><span class="material-symbols-rounded">search</span><input id="stockSearch" type="search" placeholder="Find a ticker" autocomplete="off" /></label>
+        </div>
+        <div class="mover-list panel" id="moverList" aria-live="polite"></div>
+        <div class="market-footnote"><span class="material-symbols-rounded">info</span><span id="marketSource">Market data source information</span></div>
+        <a class="finance-link" href="https://www.google.com/finance/" target="_blank" rel="noopener">Open Google Finance <span class="material-symbols-rounded">open_in_new</span></a>
+      </section>
+
+      <section class="quick-links section-block">
+        <div class="section-heading"><div><p class="eyebrow">YOUR SHORTCUTS</p><h2>Explore</h2></div></div>
+        <div class="shortcut-grid">
+          <a class="shortcut-tile cyan" href="https://www.google.com/finance/" target="_blank" rel="noopener"><span class="material-symbols-rounded">candlestick_chart</span><strong>Google Finance</strong><small>Market overview</small><span class="tile-arrow material-symbols-rounded">north_east</span></a>
+          <a class="shortcut-tile blue" href="https://www.weather.gov/okx/" target="_blank" rel="noopener"><span class="material-symbols-rounded">cloud</span><strong>Weather alerts</strong><small>National Weather Service</small><span class="tile-arrow material-symbols-rounded">north_east</span></a>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <a class="nav-item selected" href="#home"><span class="material-symbols-rounded">wb_sunny</span><small>Weather</small></a>
+      <a class="nav-item" href="#markets"><span class="material-symbols-rounded">query_stats</span><small>Markets</small></a>
+      <button class="nav-item" id="shareButton"><span class="material-symbols-rounded">ios_share</span><small>Share</small></button>
+    </nav>
+    <footer class="page-footer">Made for the little screen. <span>Dayline · Bronx, NY</span></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="./app.js" defer></script>
+</body>
+</html>
